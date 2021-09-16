@@ -1,5 +1,6 @@
 {
   "name": "corso-react-altran-20210916",
+  "description": "todo app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -14,14 +15,23 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "lint-staged": "lint-staged",
+    "test": "react-scripts test --watchAll=false"
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "prettier --write"
+    ],
+    "*.{json,md}": "prettier --write"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "react/jsx-key": "error"
+    }
   },
   "browserslist": {
     "production": [
@@ -34,5 +44,21 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "pre-commit": [
+    "lint-staged"
+  ],
+  "prettier": {
+    "arrowParens": "always",
+    "jsxBracketSameLine": false,
+    "jsxSingleQuote": true,
+    "printWidth": 120,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "devDependencies": {
+    "lint-staged": "^11.1.2",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.4.1"
   }
 }
