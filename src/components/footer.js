@@ -1,6 +1,11 @@
 import { useCallback } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import classNames from 'classnames';
 
 export function Footer() {
+  const { filter } = useParams();
+  console.log(filter);
+
   const onClickClear = useCallback(() => {
     console.log('Clear');
   }, []);
@@ -12,10 +17,20 @@ export function Footer() {
       <span className='todo-count'>{message}</span>
 
       <ul className='filters'>
-        <li>All</li>
-        <li>Active</li>
         <li>
-          <a href='/completed'>Completed</a>
+          <Link to='/todos/all' className={classNames({ selected: filter === 'all' })}>
+            All
+          </Link>
+        </li>
+        <li>
+          <Link to='/todos/active' className={classNames({ selected: filter === 'active' })}>
+            Active
+          </Link>
+        </li>
+        <li>
+          <Link to='/todos/completed' className={classNames({ selected: filter === 'completed' })}>
+            Completed
+          </Link>
         </li>
       </ul>
 

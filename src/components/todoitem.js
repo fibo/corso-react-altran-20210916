@@ -1,13 +1,23 @@
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
+import { toggleToDo } from '../reducers/todos';
 
-export function Todoitem({ text, completed }) {
-  const onChangeToggle = useCallback((event) => {
-    console.log(event.target.checked);
-  }, []);
+export function Todoitem({ text, completed, id }) {
+  const dispatch = useDispatch();
 
-  const onClickDestroy = useCallback((event) => {
-    console.log('destroy', text);
-  }, []);
+  const onChangeToggle = useCallback(
+    (event) => {
+      dispatch(toggleToDo(event.target.checked, id));
+    },
+    [dispatch, id],
+  );
+
+  const onClickDestroy = useCallback(
+    (event) => {
+      console.log('destroy', text);
+    },
+    [text],
+  );
 
   return (
     <li className='completed'>

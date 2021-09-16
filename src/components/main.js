@@ -9,6 +9,7 @@ export function Main() {
 
   const todoList = useSelector(selectTodoList);
 
+  console.log(todoList);
   useEffect(() => {
     dispatch(fetchTodoList());
   }, [dispatch]);
@@ -18,7 +19,7 @@ export function Main() {
       <input type='checkbox' className='toggle-all' />
       <ul className='todo-list'>
         {todoList.map((todo) => (
-          <Todoitem key={todo.id} text={todo.text} completed={todo.completed} />
+          <Todoitem key={todo.id} text={todo.text} completed={todo.completed} id={todo.id} />
         ))}
       </ul>
     </section>

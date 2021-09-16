@@ -11,6 +11,12 @@ const FETCH_TODO_LIST_FAILURE = 'FETCH_TODO_LIST_FAILURE';
 
 export const selectTodoList = (state) => state.todos.list;
 
+export const toggleToDo = (checked, id) => ({
+  type: 'TOGGLE_TODO',
+  checked,
+  id,
+});
+
 export const fetchTodoList = () => (dispatch, getState) => {
   const state = getState();
 
@@ -56,6 +62,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         fetchTodoListRequestIsWaiting: false,
+      };
+    }
+
+    case 'TOGGLE_TODO': {
+      return {
+        ...state,
+        list: state.list.map((todo) => {
+          if (todo.id === action.id) {
+            return {
+              ...todo,
+              completed: action.checked,
+            };
+          } else {
+            return todo;
+          }
+        }),
       };
     }
 
