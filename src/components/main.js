@@ -1,18 +1,23 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { selectTodoList, fetchTodoList } from '../reducers/todos';
 import { Todoitem } from './todoitem';
 
 export function Main() {
-  const todos = {
-    list: [
-      { id: 1, text: 'pippo', completed: true },
-      { id: 2, text: 'ciao', completed: false },
-    ],
-  };
+  const dispatch = useDispatch();
+
+  const todoList = useSelector(selectTodoList);
+
+  useEffect(() => {
+    dispatch(fetchTodoList());
+  }, [dispatch]);
 
   return (
     <section className='main'>
       <input type='checkbox' className='toggle-all' />
       <ul className='todo-list'>
-        {todos.list.map((todo) => (
+        {todoList.map((todo) => (
           <Todoitem key={todo.id} text={todo.text} completed={todo.completed} />
         ))}
       </ul>
