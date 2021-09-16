@@ -1,17 +1,35 @@
 import { useCallback } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectActiveTodos, selectCompletedTodos, clearCompleted } from '../reducers/todos';
 
 export function Footer() {
   const { filter } = useParams();
-  console.log(filter);
+  const dispatch = useDispatch();
 
   const onClickClear = useCallback(() => {
-    console.log('Clear');
-  }, []);
+    dispatch(clearCompleted());
+  }, [dispatch]);
 
-  const message = 'No Item !!';
-  const completedTodoCount = 1;
+  const completedTodos = useSelector(selectCompletedTodos);
+  const activeTodos = useSelector(selectActiveTodos);
+
+  const completedTodoCount = completedTodos.length;
+  const activeTodoCount = activeTodos.length;
+
+  let message = 'No Item !!';
+  switch (activeTodoCount) {
+    case 0:
+      message = 'No Item';
+      break;
+    case 1:
+      message = 'One Item Left';
+      break;
+    default:
+      message = `${activeTodoCount} items left`;
+  }
+
   return (
     <footer className='footer'>
       <span className='todo-count'>{message}</span>
@@ -34,7 +52,7 @@ export function Footer() {
         </li>
       </ul>
 
-      {completedTodoCount > 0 && (
+      {filter !== 'active' && completedTodoCount > 0 && (
         <button className='clear-completed' onClick={onClickClear}>
           Clear Completed
         </button>

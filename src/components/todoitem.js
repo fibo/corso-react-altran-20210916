@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { toggleToDo } from '../reducers/todos';
+import { toggleToDo, destroyTodo } from '../reducers/todos';
 
 export function Todoitem({ text, completed, id }) {
   const dispatch = useDispatch();
@@ -14,9 +14,9 @@ export function Todoitem({ text, completed, id }) {
 
   const onClickDestroy = useCallback(
     (event) => {
-      console.log('destroy', text);
+      dispatch(destroyTodo(id));
     },
-    [text],
+    [dispatch, id],
   );
 
   return (

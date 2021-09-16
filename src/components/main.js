@@ -1,13 +1,22 @@
 import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-import { selectTodoList, fetchTodoList, toogleAllTodos } from '../reducers/todos';
+import { useParams } from 'react-router-dom';
+import {
+  selectTodoList,
+  fetchTodoList,
+  toogleAllTodos,
+  selectActiveTodos,
+  selectCompletedTodos,
+} from '../reducers/todos';
 import { Todoitem } from './todoitem';
 
 export function Main() {
   const dispatch = useDispatch();
+  const { filter } = useParams();
 
-  const todoList = useSelector(selectTodoList);
+  const allList = useSelector(selectTodoList);
+  const completedTodos = useSelector(selectCompletedTodos);
+  const activeTodos = useSelector(selectActiveTodos);
 
   const onChangeToogleAll = useCallback(
     (event) => {
@@ -15,6 +24,21 @@ export function Main() {
     },
     [dispatch],
   );
+
+  let todoList = [];
+  switch (filter) {
+    case 'all':
+      todoList = allList;
+      break;
+    case 'active':
+      todoList = activeTodos;
+      break;
+    case 'completed':
+      todoList = completedTodos;
+      break;
+    default:
+      todoList = allList;
+  }
 
   useEffect(() => {
     dispatch(fetchTodoList());

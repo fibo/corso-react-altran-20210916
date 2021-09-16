@@ -10,6 +10,17 @@ const FETCH_TODO_LIST_SUCCESS = 'FETCH_TODO_LIST_SUCCESS';
 const FETCH_TODO_LIST_FAILURE = 'FETCH_TODO_LIST_FAILURE';
 
 export const selectTodoList = (state) => state.todos.list;
+export const selectActiveTodos = (state) => state.todos.list.filter((todo) => !todo.completed);
+export const selectCompletedTodos = (state) => state.todos.list.filter((todo) => todo.completed);
+
+export const destroyTodo = (id) => ({
+  type: 'DESTROY_TODO',
+  id,
+});
+
+export const clearCompleted = () => ({
+  type: 'CLEAR_COMPLETED',
+});
 
 export const toggleToDo = (checked, id) => ({
   type: 'TOGGLE_TODO',
@@ -106,6 +117,9 @@ export default function reducer(state = initialState, action) {
       };
     }
     case 'CREATE_TODO': {
+      if (action.text == '') {
+        return state;
+      }
       const id = Math.random()
         .toString(36)
         .replace(/[^a-z]+/g, '')
@@ -113,6 +127,22 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         list: state.list.concat({ id, text: action.text, completed: false }),
+      };
+    }
+
+    case 'CLEAR_COMPLETED': {
+      return {
+        ...state,
+        list: state.list.filter((todo) => {
+          return !todo.completed;
+        }),
+      };
+    }
+
+    case 'DESTROY_TODO': {
+      return {
+        ...state,
+        list: state.list.filter((todo) => todo.id != action.id),
       };
     }
 
