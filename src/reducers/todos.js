@@ -17,6 +17,18 @@ export const toggleToDo = (checked, id) => ({
   id,
 });
 
+export const toogleAllTodos = (checked) => ({
+  type: 'TOGGLE_ALL_TODOS',
+  checked,
+});
+
+export const createTodo = (text) => {
+  return {
+    type: 'CREATE_TODO',
+    text,
+  };
+};
+
 export const fetchTodoList = () => (dispatch, getState) => {
   const state = getState();
 
@@ -42,6 +54,7 @@ export const fetchTodoList = () => (dispatch, getState) => {
 };
 
 export default function reducer(state = initialState, action) {
+  console.log(action);
   switch (action.type) {
     case FETCH_TODO_LIST_REQUEST: {
       return {
@@ -78,6 +91,28 @@ export default function reducer(state = initialState, action) {
             return todo;
           }
         }),
+      };
+    }
+
+    case 'TOGGLE_ALL_TODOS': {
+      return {
+        ...state,
+        list: state.list.map((todo) => {
+          return {
+            ...todo,
+            completed: action.checked,
+          };
+        }),
+      };
+    }
+    case 'CREATE_TODO': {
+      const id = Math.random()
+        .toString(36)
+        .replace(/[^a-z]+/g, '')
+        .substr(0, 5);
+      return {
+        ...state,
+        list: state.list.concat({ id, text: action.text, completed: false }),
       };
     }
 

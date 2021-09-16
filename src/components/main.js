@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectTodoList, fetchTodoList } from '../reducers/todos';
+import { selectTodoList, fetchTodoList, toogleAllTodos } from '../reducers/todos';
 import { Todoitem } from './todoitem';
 
 export function Main() {
@@ -9,14 +9,20 @@ export function Main() {
 
   const todoList = useSelector(selectTodoList);
 
-  console.log(todoList);
+  const onChangeToogleAll = useCallback(
+    (event) => {
+      dispatch(toogleAllTodos(event.target.checked));
+    },
+    [dispatch],
+  );
+
   useEffect(() => {
     dispatch(fetchTodoList());
   }, [dispatch]);
 
   return (
     <section className='main'>
-      <input type='checkbox' className='toggle-all' />
+      <input type='checkbox' className='toggle-all' onChange={onChangeToogleAll} />
       <ul className='todo-list'>
         {todoList.map((todo) => (
           <Todoitem key={todo.id} text={todo.text} completed={todo.completed} id={todo.id} />
