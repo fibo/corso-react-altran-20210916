@@ -1,8 +1,10 @@
+import { Todoitem } from './todoitem';
+
 export function Main() {
   const todos = {
     list: [
-      { id: 1, text: 'pippo' },
-      { id: 2, text: 'ciao' },
+      { id: 1, text: 'pippo', completed: true },
+      { id: 2, text: 'ciao', completed: false },
     ],
   };
 
@@ -11,7 +13,7 @@ export function Main() {
       <input type='checkbox' className='toggle-all' />
       <ul className='todo-list'>
         {todos.list.map((todo) => (
-          <div key={todo.id}>{todo.text}</div>
+          <Todoitem key={todo.id} text={todo.text} completed={todo.completed} />
         ))}
       </ul>
     </section>
