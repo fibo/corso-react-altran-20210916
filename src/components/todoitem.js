@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleToDo, destroyTodo } from '../reducers/todos';
@@ -20,7 +21,7 @@ export function Todoitem({ text, completed, id }) {
   );
 
   return (
-    <li className='completed'>
+    <li className={classNames({ completed: completed })}>
       <div className='view'>
         <input className='toggle' type='checkbox' checked={completed} onChange={onChangeToggle} />
         <label>{text}</label>
