@@ -1,4 +1,3 @@
-import { FETCH_TODO_LIST_SUCCESS } from '../reducers/todos';
 import { setTodoList } from '../stores/localstorage';
 
 export const localStorageMiddleware = (store) => (next) => (action) => {
@@ -15,7 +14,7 @@ export const localStorageMiddleware = (store) => (next) => (action) => {
       localStorage.removeItem('lastLogin');
 
       return next(action);
-    case FETCH_TODO_LIST_SUCCESS:
+    case 'FETCH_TODO_LIST_SUCCESS':
       //localStorage.setItem('todos.list',JSON.stringify(action.data))
 
       setTodoList(action.data);

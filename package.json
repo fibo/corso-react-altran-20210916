@@ -56,7 +56,8 @@
     ]
   },
   "pre-commit": [
-    "lint-staged"
+    "lint-staged",
+    "test"
   ],
   "prettier": {
     "arrowParens": "always",

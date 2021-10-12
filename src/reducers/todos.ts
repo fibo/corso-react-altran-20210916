@@ -9,41 +9,46 @@ const initialState: TodosState = {
   list: getTodoList(),
 };
 
-const FETCH_TODO_LIST_REQUEST = 'FETCH_TODO_LIST_REQUEST';
-export const FETCH_TODO_LIST_SUCCESS = 'FETCH_TODO_LIST_SUCCESS';
-const FETCH_TODO_LIST_FAILURE = 'FETCH_TODO_LIST_FAILURE';
 
-type ActionType = typeof FETCH_TODO_LIST_REQUEST | typeof FETCH_TODO_LIST_SUCCESS | typeof FETCH_TODO_LIST_FAILURE | 'TOGGLE_TODO' | 'TOGGLE_ALL_TODOS' | 'CREATE_TODO' | 'CLEAR_COMPLETED' | 'DESTROY_TODO';
-type ActionData = Partial<Todo>;
 
+
+type ActionType = 'FETCH_TODO_LIST_REQUEST' | 'FETCH_TODO_LIST_SUCCESS' | 'FETCH_TODO_LIST_FAILURE' | 'TOGGLE_TODO' | 'TOGGLE_ALL_TODOS' | 'CREATE_TODO' | 'CLEAR_COMPLETED' | 'DESTROY_TODO';
+
+type TodosAction =Action<ActionType, ActionData>;
+type ToggleTodoData = Pick<Todo, 'completed' | 'id'>;
+type ToggleAllTodosData = Pick<Todo, 'completed'>
+type CreateTodoData = Pick<Todo, 'text'>
+type DestroyTodoData = Pick<Todo, 'id'>
+type FetchTodosData = Todo[];
+type ActionData = ToggleTodoData | ToggleAllTodosData|CreateTodoData|DestroyTodoData|FetchTodosData;
 
 export const selectTodoList = (state: State) => state.todos.list;
 export const selectActiveTodos = (state: State) => state.todos.list.filter((todo) => !todo.completed);
 export const selectCompletedTodos = (state: State) => state.todos.list.filter((todo) => todo.completed);
 
-export const destroyTodo = (id : Todo["id"]) => ({
+export const destroyTodo = (data :DestroyTodoData) => ({
   type: 'DESTROY_TODO',
-  data: { id },
+  data
 });
 
 export const clearCompleted = () => ({
   type: 'CLEAR_COMPLETED',
 });
 
-export const toggleToDo = (completed : Todo["completed"], id : Todo["id"]) => ({
+export const toggleToDo = (data:ToggleTodoData) => ({
   type: 'TOGGLE_TODO',
-  data : { id, completed }
+  data
 });
 
-export const toogleAllTodos = (completed : Todo["completed"]) => ({
+export const toogleAllTodos = (data:ToggleAllTodosData) => ({
   type: 'TOGGLE_ALL_TODOS',
-  data : { completed },
+  data
 });
 
-export const createTodo = (text : Todo["text"]) => {
+export const createTodo = (data :CreateTodoData):TodosAction => {
   return {
     type: 'CREATE_TODO',
-    data : { text },
+    data
   };
 };
 
@@ -52,44 +57,44 @@ export const fetchTodoList = () => (dispatch : Dispatch, getState : GetState ) =
 
   if (state.todos.fetchTodoListRequestIsWaiting) return;
 
-  dispatch({ type: FETCH_TODO_LIST_REQUEST });
+  dispatch({ type: 'FETCH_TODO_LIST_REQUEST' });
 
   fetch(`${baseUrl}/todos`)
     .then((response) => {
       if (response.ok) {
         return response.json();
       } else {
-        dispatch({ type: FETCH_TODO_LIST_FAILURE });
+        dispatch({ type: 'FETCH_TODO_LIST_FAILURE' });
       }
     })
     .then((data) => {
-      dispatch({ type: FETCH_TODO_LIST_SUCCESS, data });
+      dispatch({ type: 'FETCH_TODO_LIST_SUCCESS', data });
     })
     .catch((error) => {
       console.error(error);
-      dispatch({ type: FETCH_TODO_LIST_FAILURE });
+      dispatch({ type: 'FETCH_TODO_LIST_FAILURE' });
     });
 };
 
-export default function reducer(state = initialState, action : Action<ActionType, ActionData>) {
+export default function reducer(state = initialState, action : TodosAction):TodosState {
   console.log(action);
   switch (action.type) {
-    case FETCH_TODO_LIST_REQUEST: {
+    case 'FETCH_TODO_LIST_REQUEST': {
       return {
         ...state,
         fetchTodoListRequestIsWaiting: true,
       };
     }
 
-    case FETCH_TODO_LIST_SUCCESS: {
+    case 'FETCH_TODO_LIST_SUCCESS': {
       return {
         ...state,
         fetchTodoListRequestIsWaiting: false,
-        list: action.data,
+        list: action.data as Todo[],
       };
     }
 
-    case FETCH_TODO_LIST_FAILURE: {
+    case 'FETCH_TODO_LIST_FAILURE': {
       return {
         ...state,
         fetchTodoListRequestIsWaiting: false,
@@ -97,13 +102,14 @@ export default function reducer(state = initialState, action : Action<ActionType
     }
 
     case 'TOGGLE_TODO': {
+      const actionData = action.data as ToggleTodoData;
       return {
         ...state,
         list: state.list.map((todo) => {
-          if (todo.id === action.data.id) {
+          if (todo.id === actionData.id) {
             return {
               ...todo,
-              completed: action.data.completed,
+              completed: actionData.completed,
             };
           } else {
             return todo;
@@ -113,20 +119,22 @@ export default function reducer(state = initialState, action : Action<ActionType
     }
 
     case 'TOGGLE_ALL_TODOS': {
+      const actionData = action.data as ToggleAllTodosData;
       return {
         ...state,
         list: state.list.map((todo) => {
           return {
             ...todo,
-            completed: action.data.completed,
+            completed: actionData.completed,
           };
         }),
       };
     }
 
     case 'CREATE_TODO': {
+      const actionData = action.data as CreateTodoData;
       // Doing nothing if there is no text in input
-      if (typeof action.data.text !== 'string') {
+      if (typeof actionData.text !== 'string' || actionData.text ==='x') {
         return state;
       }
 
@@ -137,7 +145,7 @@ export default function reducer(state = initialState, action : Action<ActionType
         ...state,
         list: state.list.concat({
           id, 
-          text: action.data.text,
+          text: actionData.text,
           completed: false 
         }),
       };
@@ -153,9 +161,10 @@ export default function reducer(state = initialState, action : Action<ActionType
     }
 
     case 'DESTROY_TODO': {
+      const actionData = action.data as DestroyTodoData;
       return {
         ...state,
-        list: state.list.filter((todo) => todo.id !== action.data.id),
+        list: state.list.filter((todo) => todo.id !== actionData.id),
       };
     }
 

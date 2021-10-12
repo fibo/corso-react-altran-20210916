@@ -11,14 +11,14 @@ export function Todoitem({ text, completed, id } : TodoitemProps) {
 
   const onChangeToggle = useCallback(
     (event) => {
-      dispatch(toggleToDo(event.target.checked, id));
+      dispatch(toggleToDo({completed : event.target.checked, id}));
     },
     [dispatch, id],
   );
 
   const onClickDestroy = useCallback(
     (event) => {
-      dispatch(destroyTodo(id));
+      dispatch(destroyTodo({id}));
     },
     [dispatch, id],
   );

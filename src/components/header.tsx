@@ -10,7 +10,7 @@ export function Header() {
     (event) => {
       if (text === '') return;
       if (event.key === 'Enter') {
-        dispatch(createTodo(text));
+        dispatch(createTodo({text}));
         setText('');
       }
     },
@@ -19,7 +19,7 @@ export function Header() {
 
   const onBlur = useCallback(() => {
     if (text === '') return;
-    dispatch(createTodo(text));
+    dispatch(createTodo({text}));
     setText('');
   }, [dispatch, text]);
 
