@@ -67,6 +67,7 @@
     "trailingComma": "all"
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.3.1",
     "json-server": "^0.16.3",
     "lint-staged": "^11.1.2",
     "pre-commit": "^1.2.2",

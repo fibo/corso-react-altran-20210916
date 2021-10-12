@@ -3,9 +3,11 @@ import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActiveTodos, selectCompletedTodos, clearCompleted } from '../reducers/todos';
+import { TodoFilter } from '../model/todos';
+type RouteFilterParam = {filter : TodoFilter}
 
 export function Footer() {
-  const { filter } = useParams();
+  const {filter} = useParams<RouteFilterParam>();
   const dispatch = useDispatch();
 
   const onClickClear = useCallback(() => {
