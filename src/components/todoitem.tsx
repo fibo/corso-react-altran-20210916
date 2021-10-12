@@ -2,8 +2,11 @@ import classNames from 'classnames';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import { toggleToDo, destroyTodo } from '../reducers/todos';
+import { Todo } from '../model/todos';
 
-export function Todoitem({ text, completed, id }) {
+type TodoitemProps = Todo; 
+
+export function Todoitem({ text, completed, id } : TodoitemProps) {
   const dispatch = useDispatch();
 
   const onChangeToggle = useCallback(
