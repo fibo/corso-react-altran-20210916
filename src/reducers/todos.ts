@@ -2,14 +2,15 @@ import { TodosState, State, Action, GetState } from './types';
 import { Todo } from "../model/todos"
 import { baseUrl } from '../api';
 import { Dispatch } from 'redux';
+import {getTodoList} from '../stores/localstorage';
 
 const initialState: TodosState = {
   fetchTodoListRequestIsWaiting: false,
-  list: [],
+  list: getTodoList(),
 };
 
 const FETCH_TODO_LIST_REQUEST = 'FETCH_TODO_LIST_REQUEST';
-const FETCH_TODO_LIST_SUCCESS = 'FETCH_TODO_LIST_SUCCESS';
+export const FETCH_TODO_LIST_SUCCESS = 'FETCH_TODO_LIST_SUCCESS';
 const FETCH_TODO_LIST_FAILURE = 'FETCH_TODO_LIST_FAILURE';
 
 type ActionType = typeof FETCH_TODO_LIST_REQUEST | typeof FETCH_TODO_LIST_SUCCESS | typeof FETCH_TODO_LIST_FAILURE | 'TOGGLE_TODO' | 'TOGGLE_ALL_TODOS' | 'CREATE_TODO' | 'CLEAR_COMPLETED' | 'DESTROY_TODO';
