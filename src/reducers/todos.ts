@@ -1,6 +1,9 @@
+import { TodosState, State, Action, GetState } from './types';
+import { Todo } from "../model/todos"
 import { baseUrl } from '../api';
+import { Dispatch } from 'redux';
 
-const initialState = {
+const initialState: TodosState = {
   fetchTodoListRequestIsWaiting: false,
   list: [],
 };
@@ -9,38 +12,41 @@ const FETCH_TODO_LIST_REQUEST = 'FETCH_TODO_LIST_REQUEST';
 const FETCH_TODO_LIST_SUCCESS = 'FETCH_TODO_LIST_SUCCESS';
 const FETCH_TODO_LIST_FAILURE = 'FETCH_TODO_LIST_FAILURE';
 
-export const selectTodoList = (state) => state.todos.list;
-export const selectActiveTodos = (state) => state.todos.list.filter((todo) => !todo.completed);
-export const selectCompletedTodos = (state) => state.todos.list.filter((todo) => todo.completed);
+type ActionType = typeof FETCH_TODO_LIST_REQUEST | typeof FETCH_TODO_LIST_SUCCESS | typeof FETCH_TODO_LIST_FAILURE | 'TOGGLE_TODO' | 'TOGGLE_ALL_TODOS' | 'CREATE_TODO' | 'CLEAR_COMPLETED' | 'DESTROY_TODO';
+type ActionData = Partial<Todo>;
 
-export const destroyTodo = (id) => ({
+
+export const selectTodoList = (state: State) => state.todos.list;
+export const selectActiveTodos = (state: State) => state.todos.list.filter((todo) => !todo.completed);
+export const selectCompletedTodos = (state: State) => state.todos.list.filter((todo) => todo.completed);
+
+export const destroyTodo = (id : Todo["id"]) => ({
   type: 'DESTROY_TODO',
-  id,
+  data: { id },
 });
 
 export const clearCompleted = () => ({
   type: 'CLEAR_COMPLETED',
 });
 
-export const toggleToDo = (checked, id) => ({
+export const toggleToDo = (completed : Todo["completed"], id : Todo["id"]) => ({
   type: 'TOGGLE_TODO',
-  checked,
-  id,
+  data : { id, completed }
 });
 
-export const toogleAllTodos = (checked) => ({
+export const toogleAllTodos = (completed : Todo["completed"]) => ({
   type: 'TOGGLE_ALL_TODOS',
-  checked,
+  data : { completed },
 });
 
-export const createTodo = (text) => {
+export const createTodo = (text : Todo["text"]) => {
   return {
     type: 'CREATE_TODO',
-    text,
+    data : { text },
   };
 };
 
-export const fetchTodoList = () => (dispatch, getState) => {
+export const fetchTodoList = () => (dispatch : Dispatch, getState : GetState ) => {
   const state = getState();
 
   if (state.todos.fetchTodoListRequestIsWaiting) return;
@@ -64,7 +70,7 @@ export const fetchTodoList = () => (dispatch, getState) => {
     });
 };
 
-export default function reducer(state = initialState, action) {
+export default function reducer(state = initialState, action : Action<ActionType, ActionData>) {
   console.log(action);
   switch (action.type) {
     case FETCH_TODO_LIST_REQUEST: {
@@ -93,10 +99,10 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         list: state.list.map((todo) => {
-          if (todo.id === action.id) {
+          if (todo.id === action.data.id) {
             return {
               ...todo,
-              completed: action.checked,
+              completed: action.data.completed,
             };
           } else {
             return todo;
@@ -111,22 +117,28 @@ export default function reducer(state = initialState, action) {
         list: state.list.map((todo) => {
           return {
             ...todo,
-            completed: action.checked,
+            completed: action.data.completed,
           };
         }),
       };
     }
+
     case 'CREATE_TODO': {
-      if (action.text === '') {
+      // Doing nothing if there is no text in input
+      if (typeof action.data.text !== 'string') {
         return state;
       }
-      const id = Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, '')
-        .substr(0, 5);
+
+      // Generate ID
+      const id = new Date().getTime();
+
       return {
         ...state,
-        list: state.list.concat({ id, text: action.text, completed: false }),
+        list: state.list.concat({
+          id, 
+          text: action.data.text,
+          completed: false 
+        }),
       };
     }
 
@@ -142,7 +154,7 @@ export default function reducer(state = initialState, action) {
     case 'DESTROY_TODO': {
       return {
         ...state,
-        list: state.list.filter((todo) => todo.id !== action.id),
+        list: state.list.filter((todo) => todo.id !== action.data.id),
       };
     }
 

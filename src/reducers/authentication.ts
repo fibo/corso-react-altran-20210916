@@ -1,20 +1,15 @@
-/// <reference path="./types.d.ts"/>
-
-type State = { 
-  authenticated : boolean
-  password : null | string
-}
+import { AuthenticationState, Action } from "./types"
 
 type ActionType = 'LOGIN' | 'LOGOUT'
-type ActionData = Pick<State, "password">
+type ActionData = Pick<AuthenticationState, "password">
 
-const initialState : State = {
+const initialState : AuthenticationState = {
   authenticated: false,
   password: null,
 };
 
 
-export const login = ({ password }: Pick<State, "password">) => ({
+export const login = ({ password }: Pick<AuthenticationState, "password">) => ({
   type: 'LOGIN',
   data : {password},
 });
@@ -23,7 +18,7 @@ export const logout = () => ({
   type: 'LOGOUT',
 });
 
-export default function reducer(state = initialState, action: Action<ActionType, ActionData>) : State {
+export default function reducer(state = initialState, action: Action<ActionType, ActionData>) : AuthenticationState {
   switch (action.type) {
 
     case 'LOGIN': {
