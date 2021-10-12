@@ -117,7 +117,7 @@ export default function reducer(state = initialState, action) {
       };
     }
     case 'CREATE_TODO': {
-      if (action.text == '') {
+      if (action.text === '') {
         return state;
       }
       const id = Math.random()
@@ -142,7 +142,7 @@ export default function reducer(state = initialState, action) {
     case 'DESTROY_TODO': {
       return {
         ...state,
-        list: state.list.filter((todo) => todo.id != action.id),
+        list: state.list.filter((todo) => todo.id !== action.id),
       };
     }
 

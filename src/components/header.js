@@ -8,7 +8,7 @@ export function Header() {
 
   const onKeyDown = useCallback(
     (event) => {
-      if (text == '') return;
+      if (text === '') return;
       if (event.key === 'Enter') {
         dispatch(createTodo(text));
         setText('');
@@ -18,7 +18,7 @@ export function Header() {
   );
 
   const onBlur = useCallback(() => {
-    if (text == '') return;
+    if (text === '') return;
     dispatch(createTodo(text));
     setText('');
   }, [dispatch, text]);
