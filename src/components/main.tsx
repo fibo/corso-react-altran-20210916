@@ -9,10 +9,13 @@ import {
   selectCompletedTodos,
 } from '../reducers/todos';
 import { Todoitem } from './todoitem';
+import { RouteFilterParam } from '../App';
+import { Todo } from '../model/todos';
+
 
 export function Main() {
   const dispatch = useDispatch();
-  const { filter } = useParams();
+  const { filter } = useParams<RouteFilterParam>();
 
   const allList = useSelector(selectTodoList);
   const completedTodos = useSelector(selectCompletedTodos);
@@ -48,7 +51,7 @@ export function Main() {
     <section className='main'>
       <input type='checkbox' className='toggle-all' onChange={onChangeToogleAll} />
       <ul className='todo-list'>
-        {todoList.map((todo) => (
+        {todoList.map((todo : Todo) => (
           <Todoitem key={todo.id} text={todo.text} completed={todo.completed} id={todo.id} />
         ))}
       </ul>

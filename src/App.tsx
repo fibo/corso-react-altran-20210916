@@ -3,6 +3,8 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { LoginPage } from './pages/login';
 import { TodosPage } from './pages/todos';
 import { PageNotFound } from './pages/404';
+import { TodoFilter } from './model/todos';
+export type RouteFilterParam = {filter : TodoFilter}
 
 export function App() {
   return (

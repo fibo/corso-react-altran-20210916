@@ -3,8 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { selectActiveTodos, selectCompletedTodos, clearCompleted } from '../reducers/todos';
-import { TodoFilter } from '../model/todos';
-type RouteFilterParam = {filter : TodoFilter}
+import { RouteFilterParam } from '../App';
 
 export function Footer() {
   const {filter} = useParams<RouteFilterParam>();
